@@ -1,0 +1,89 @@
+﻿@model ConnectingDots.Models.Game
+@{
+    ViewBag.Title = "Connecting Dots";
+    var areThereGames = Model.Id;
+    
+}
+<tr>
+
+    <td id="loc_id" style="display: none;">@Model.Id</td>
+    <td id="1_add">@Model.stop1_add</td>
+    <td id="2_add">@Model.stop2_add</td>
+</tr>
+<tr>
+    <td id="3_add">@Model.stop3_add</td>
+    <td id="4_add">@Model.stop4_add</td>
+</tr>
+<tr>
+    <td id="5_add">@Model.stop5_add</td>
+    <td id="6_add">@Model.stop6_add</td>
+</tr>
+<tr>
+    @if (@Model.stop1_stat.Equals("notFound") || @Model.stop2_stat.Equals("notFound") || @Model.stop3_stat.Equals("notFound") ||
+                                            @Model.stop4_stat.Equals("notFound") || @Model.stop5_stat.Equals("notFound") || @Model.stop6_stat.Equals("notFound"))
+    {
+        <td colspan="2">In progress</td>
+    }
+    else
+    {
+        <td colspan="2">Game Over. Ask parent to reset.</td>
+    }
+</tr>
+<tr>
+
+    <td id="1_lat" style="display: none;">@Model.stop1_lat</td>
+    <td id="1_lon" style="display: none;">@Model.stop1_lon</td>
+    <td id="1_stat" style="display: none;">@Model.stop1_stat</td>
+
+    <td id="2_lat" style="display: none;">@Model.stop2_lat</td>
+    <td id="2_lon" style="display: none;">@Model.stop2_lon</td>
+    <td id="2_stat" style="display: none;">@Model.stop2_stat</td>
+
+    <td id="3_lat" style="display: none;">@Model.stop3_lat</td>
+    <td id="3_lon" style="display: none;">@Model.stop3_lon</td>
+    <td id="3_stat" style="display: none;">@Model.stop3_stat</td>
+
+    <td id="4_lat" style="display: none;">@Model.stop4_lat</td>
+    <td id="4_lon" style="display: none;">@Model.stop4_lon</td>
+    <td id="4_stat" style="display: none;">@Model.stop4_stat</td>
+
+    <td id="5_lat" style="display: none;">@Model.stop5_lat</td>
+    <td id="5_lon" style="display: none;">@Model.stop5_lon</td>
+    <td id="5_stat" style="display: none;">@Model.stop5_stat</td>
+
+    <td id="6_lat" style="display: none;">@Model.stop6_lat</td>
+    <td id="6_lon" style="display: none;">@Model.stop6_lon</td>
+    <td id="6_stat" style="display: none;">@Model.stop6_stat</td>
+
+</tr>
+
+<script>
+    $(document).ready(function () {
+        var s1 = $("#1_stat").text();
+        var s2 = $("#2_stat").text();
+        var s3 = $("#3_stat").text();
+        var s4 = $("#4_stat").text();
+        var s5 = $("#5_stat").text();
+        var s6 = $("#6_stat").text();
+
+        if (s1.localeCompare("Found") == 0) {
+            $("#1_add").css("background-color", "greenYellow");
+        }
+        if (s2.localeCompare("Found") == 0) {
+            $("#2_add").css("background-color", "greenYellow");
+        }
+        if (s3.localeCompare("Found") == 0) {
+            $("#3_add").css("background-color", "greenYellow");
+        }
+        if (s4.localeCompare("Found") == 0) {
+            $("#4_add").css("background-color", "greenYellow");
+        }
+        if (s5.localeCompare("Found") == 0) {
+            $("#5_add").css("background-color", "greenYellow");
+        }
+        if (s6.localeCompare("Found") == 0) {
+            $("#6_add").css("background-color", "greenYellow");
+        }
+    });
+
+</script>

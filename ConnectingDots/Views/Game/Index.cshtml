@@ -1,0 +1,458 @@
+﻿@model ConnectingDots.Models.GameViewModel
+@{
+    var areThereGames = Model.AllGames.Any();
+    ViewBag.Title = "Connecting Dots";
+}
+
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyD_r1iAegOuFVUvvEDsVACcx6EOgRJx-AI&libraries=places" async defer></script>
+
+<div class="col-md-12">
+    @using (Ajax.BeginForm("create", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        InsertionMode = InsertionMode.InsertAfter,
+        UpdateTargetId = "resultsTableGame",
+        OnSuccess = "gameAddedSuccessfully",
+        OnFailure = "problemAddingGame"
+
+    }))
+    {
+        <h3>Create Game</h3>
+
+        <table class="table">
+            <tr>
+                <td colspan="3">
+                    <div class="form-group col-md-2">
+                        @Html.LabelFor(x => x.Game.child, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="form-group col-md-9">
+                        @Html.EditorFor(x => x.Game.child, new { htmlAttributes = new { @class = "form-control", id = "child" } })
+                        @Html.ValidationMessageFor(x => x.Game.child, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group col-md-1">
+                        <button type="button" class="btn btn-primary" onclick="reset()">Reset</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td >
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Game.stop1_add, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop1_add, new { htmlAttributes = new { @class = "form-control", id = "stop1_add" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop1_add, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop1_lat, new { htmlAttributes = new { @class = "form-control", id = "stop1_lat", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop1_lat, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop1_lon, new { htmlAttributes = new { @class = "form-control", id = "stop1_lon", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop1_lon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(x => x.Game.stop1_stat, new { id = "stop1_stat" })
+                </td>
+                <td>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Game.stop2_add, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop2_add, new { htmlAttributes = new { @class = "form-control", id = "stop2_add" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop2_add, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop2_lat, new { htmlAttributes = new { @class = "form-control", id = "stop2_lat", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop2_lat, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop2_lon, new { htmlAttributes = new { @class = "form-control", id = "stop2_lon", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop2_lon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Game.stop2_stat, new { id = "stop2_stat" })
+                </td>
+                <td>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Game.stop3_add, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop3_add, new { htmlAttributes = new { @class = "form-control", id = "stop3_add" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop3_add, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop3_lat, new { htmlAttributes = new { @class = "form-control", id = "stop3_lat", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop3_lat, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop3_lon, new { htmlAttributes = new { @class = "form-control", id = "stop3_lon", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop3_lon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Game.stop3_stat, new { id = "stop3_stat" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Game.stop4_add, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop4_add, new { htmlAttributes = new { @class = "form-control", id = "stop4_add" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop4_add, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop4_lat, new { htmlAttributes = new { @class = "form-control", id = "stop4_lat", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop4_lat, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop4_lon, new { htmlAttributes = new { @class = "form-control", id = "stop4_lon", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop4_lon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Game.stop4_stat, new { id = "stop4_stat" })
+                </td>
+                <td>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Game.stop5_add, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop5_add, new { htmlAttributes = new { @class = "form-control", id = "stop5_add" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop5_add, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop5_lat, new { htmlAttributes = new { @class = "form-control", id = "stop5_lat", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop5_lat, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop5_lon, new { htmlAttributes = new { @class = "form-control", id = "stop5_lon", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop5_lon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Game.stop5_stat, new { id = "stop5_stat" })
+                </td>
+                <td>
+                    <div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Game.stop6_add, htmlAttributes: new { @class = "control-label" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop6_add, new { htmlAttributes = new { @class = "form-control", id = "stop6_add" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop6_add, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop6_lat, new { htmlAttributes = new { @class = "form-control", id = "stop6_lat", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop6_lat, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-group">
+                            @Html.EditorFor(x => x.Game.stop6_lon, new { htmlAttributes = new { @class = "form-control", id = "stop6_lon", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(x => x.Game.stop6_lon, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.Game.stop6_stat, new { id = "stop6_stat" })
+                </td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 1em;">
+            <input type="submit"  class="form-control btn-primary" value="Add Game" />
+        </div>
+    }
+</div>
+<br/>
+
+
+<div class="col-md-12">
+    <br/>
+    <h3>All Games</h3>
+    <table id="resultsTableGame" class="table table-condensed table-responsive">
+        <tr>
+            <th>Child</th>
+            <th>Location 1</th>
+            <th>Location 2</th>
+            <th>Location 3</th>
+            <th>Location 4</th>
+            <th>Location 5</th>
+            <th>Location 6</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+
+        @foreach (var game in Model.AllGames)
+            {
+                Html.RenderPartial("_gameCreate", game);
+            }
+    </table>
+</div>
+
+<br />
+<div id="map" style="border:double" class="col-md-12"></div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <style>
+        #map {
+            height: 300px;
+        }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            var audio = new Audio('../../Images/busy.wav');
+            audio.play();
+
+                autoFillFields("stop1_add", "stop1_lat", "stop1_lon", "stop1_stat");
+                autoFillFields("stop2_add", "stop2_lat", "stop2_lon", "stop2_stat");
+                autoFillFields("stop3_add", "stop3_lat", "stop3_lon", "stop3_stat");
+                autoFillFields("stop4_add", "stop4_lat", "stop4_lon", "stop4_stat");
+                autoFillFields("stop5_add", "stop5_lat", "stop5_lon", "stop5_stat");
+                autoFillFields("stop6_add", "stop6_lat", "stop6_lon", "stop6_stat");
+                $("#status").val("InProgress");
+
+                initMap();
+
+            });
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 12
+            });
+
+            if (Modernizr.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    map.setCenter(pos);
+
+                    var im = 'http://maps.google.com/mapfiles/ms/micons/blue-dot.png';
+                    var marker = new google.maps.Marker({ map: map, animation: google.maps.Animation.BOUNCE });
+
+                    marker.setPosition(pos)
+                    marker.setIcon(im);
+                    var InfoWindowContent = [];
+                     @foreach (var game in Model.AllGames)
+                    {
+                        <text>
+                    var loc1 = new google.maps.LatLng(@game.stop1_lat, @game.stop1_lon, false);
+                    marker = new google.maps.Marker({ map: map, position: loc1, animation: google.maps.Animation.DROP, label: '1' });
+                    InfoWindowContent[1] = '@game.stop1_add';
+                    attachDisplayMessage(marker, InfoWindowContent[1]);
+
+                    var loc2 = new google.maps.LatLng(@game.stop2_lat, @game.stop2_lon, false);
+                    marker = new google.maps.Marker({ map: map, position: loc2, animation: google.maps.Animation.DROP, label: '2' });
+                    InfoWindowContent[2] = '@game.stop2_add';
+                    attachDisplayMessage(marker, InfoWindowContent[2]);
+
+                    var loc3 = new google.maps.LatLng(@game.stop3_lat, @game.stop3_lon, false);
+                    marker = new google.maps.Marker({ map: map, position: loc3, animation: google.maps.Animation.DROP, label: '3' });
+                    InfoWindowContent[3] = '@game.stop3_add';
+                    attachDisplayMessage(marker, InfoWindowContent[3]);
+
+                    var loc4 = new google.maps.LatLng(@game.stop4_lat, @game.stop4_lon, false);
+                    marker = new google.maps.Marker({ map: map, position: loc4, animation: google.maps.Animation.DROP, label: '4' });
+                    InfoWindowContent[4] = '@game.stop4_add';
+                    attachDisplayMessage(marker, InfoWindowContent[4]);
+
+                    var loc5 = new google.maps.LatLng(@game.stop5_lat, @game.stop5_lon, false);
+                    marker = new google.maps.Marker({ map: map, position: loc5, animation: google.maps.Animation.DROP, label: '5'  });
+                    InfoWindowContent[5] = '@game.stop5_add';
+                    attachDisplayMessage(marker, InfoWindowContent[5]);
+
+                    var loc6 = new google.maps.LatLng(@game.stop6_lat, @game.stop6_lon, false);
+                    marker = new google.maps.Marker({ map: map, position: loc6, animation: google.maps.Animation.DROP, label: '6' });
+                    InfoWindowContent[6] = '@game.stop6_add';
+                    attachDisplayMessage(marker, InfoWindowContent[6]);
+                        </text>
+                     }
+                    }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+
+        function attachDisplayMessage(marker, displayMessage) {
+            var infowindow = new google.maps.InfoWindow({
+                content: displayMessage
+            });
+            marker.addListener('click', function() {
+                infowindow.open(marker.get('map'), marker);
+            });
+        }
+
+        function addLocations()
+        {
+            var InfoWindowContent = [];
+            var marker;
+            @foreach (var game in Model.AllGames)
+            {
+                <text>
+                var loc1 = new google.maps.LatLng(@game.stop1_lat, @game.stop1_lon, false);
+                marker = new google.maps.Marker({ map: map, position: loc1 });
+                InfoWindowContent[1] = '@game.stop1_add';
+                attachDisplayMessage(marker, InfoWindowContent[1]);
+
+                var loc2 = new google.maps.LatLng(@game.stop2_lat, @game.stop2_lon, false);
+                marker = new google.maps.Marker({ map: map, position: loc2 });
+                InfoWindowContent[2] = '@game.stop2_add';
+                attachDisplayMessage(marker, InfoWindowContent[2]);
+
+                var loc3 = new google.maps.LatLng(@game.stop3_lat, @game.stop3_lon, false);
+                marker = new google.maps.Marker({ map: map, position: loc3 });
+                InfoWindowContent[3] = '@game.stop3_add';
+                attachDisplayMessage(marker, InfoWindowContent[3]);
+
+                var loc4 = new google.maps.LatLng(@game.stop4_lat, @game.stop4_lon, false);
+                marker = new google.maps.Marker({ map: map, position: loc4 });
+                InfoWindowContent[4] = '@game.stop4_add';
+                attachDisplayMessage(marker, InfoWindowContent[4]);
+
+                var loc5 = new google.maps.LatLng(@game.stop5_lat, @game.stop5_lon, false);
+                marker = new google.maps.Marker({ map: map, position: loc5 });
+                InfoWindowContent[5] = '@game.stop5_add';
+                attachDisplayMessage(marker, InfoWindowContent[5]);
+
+                var loc6 = new google.maps.LatLng(@game.stop6_lat, @game.stop6_lon, false);
+                marker = new google.maps.Marker({ map: map, position: loc6 });
+                InfoWindowContent[6] = '@game.stop6_stat' +'@game.stop6_add';
+                attachDisplayMessage(marker, InfoWindowContent[6]);
+                </text>
+            }
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                                  'Error: The Geolocation service failed.' :
+                                  'Error: Your browser doesn\'t support geolocation.');
+        }
+
+
+        function autoFillFields(address, latitude, longitude, status) {
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+            function initialize() {
+                var autocomplete = new google.maps.places.Autocomplete(document.getElementById(address));
+                google.maps.event.addListener(autocomplete, 'place_changed',
+                    function () {
+
+                        // Get the place details from the autocomplete object.
+                        var place = autocomplete.getPlace();
+                        var lat = place.geometry.location.lat();
+                        var long = place.geometry.location.lng();
+
+                        $("#" + latitude + "").val(lat);
+                        $("#" + longitude + "").val(long);
+                        $("#" + status + "").val("notFound");
+                    });
+            }
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        function RemoveRow(content, status, xhr) {
+            if (status == "success") {
+                $("#game-row-" + content).remove();
+                addLocations();
+            }
+            var rowCount = $("#resultsTableGame tr").length;
+
+            if (rowCount <= 2) {
+                $("#noResultRow").addClass("no-results").removeClass("results");
+            }
+        }
+
+        function gameAddedSuccessfully() {
+
+            $("#noResultRow").addClass("results").removeClass("no-results");
+
+            reset();
+        }
+
+        function problemAddingGame(xhr, status, code) {
+            var content = xhr.responseText;
+            alert(content);
+        }
+
+        function reset(){
+            $("#child").val("");
+            for (i = 0; i < 7; i++) {
+                $("#stop"+i+"_add").val("");
+                $("#stop"+i+"_lat").val("");
+                $("#stop"+i+"_lon").val("");
+            }
+            $("#stop1_add").val("");
+        }
+    </script>
+}
+
+
+
+

@@ -1,0 +1,74 @@
+﻿@model ConnectingDots.Models.Game
+@{
+    ViewBag.Title = "Connecting Dots";
+}
+<tr id="game-row-@Model.Id">
+    <td>@Model.child</td>
+    @if (@Model.stop1_stat.Equals("Found"))
+    {
+        <td style="background-color: greenyellow;">@Model.stop1_add</td>
+    }
+    else
+    {
+        <td>@Model.stop1_add</td>
+    }
+
+    @if (@Model.stop2_stat.Equals("Found"))
+    {
+        <td style="background-color: greenyellow;">@Model.stop2_add</td>
+    }
+    else
+    {
+        <td>@Model.stop2_add</td>
+    }
+
+    @if (@Model.stop3_stat.Equals("Found"))
+    {
+        <td style="background-color: greenyellow;">@Model.stop3_add</td>
+    }
+    else
+    {
+        <td>@Model.stop3_add</td>
+    }
+
+    @if (@Model.stop4_stat.Equals("Found"))
+    {
+        <td style="background-color: greenyellow;">@Model.stop4_add</td>
+    }
+    else
+    {
+        <td>@Model.stop4_add</td>
+    }
+    @if (@Model.stop5_stat.Equals("Found"))
+    {
+        <td style="background-color: greenyellow;">@Model.stop5_add</td>
+    }
+    else
+    {
+        <td>@Model.stop5_add</td>
+    }
+
+    @if (@Model.stop6_stat.Equals("Found"))
+    {
+        <td style="background-color: greenyellow;">@Model.stop6_add</td>
+    }
+    else
+    {
+        <td>@Model.stop6_add</td>
+
+    }
+
+    @if (@Model.stop1_stat.Equals("notFound") || @Model.stop2_stat.Equals("notFound") || @Model.stop3_stat.Equals("notFound") ||
+                    @Model.stop4_stat.Equals("notFound") || @Model.stop5_stat.Equals("notFound") || @Model.stop6_stat.Equals("notFound"))
+    {
+        <td>In progress</td>
+    }
+    else
+    {
+        <td>Game Over. Delete and add a new game.</td>
+    }
+
+    <td>
+        @Ajax.ActionLink("Delete", "delete", new { Id = Model.Id }, new AjaxOptions { HttpMethod = "POST", OnSuccess = "RemoveRow", Confirm = "Are you sure you want to delete this game?" })
+    </td>
+</tr>
